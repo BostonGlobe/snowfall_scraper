@@ -27,7 +27,7 @@ module.exports = function () {
 
 	return new Promise(function(resolve, reject) {
 
-		var URL = 'http://www.erh.noaa.gov/hydromet/eventdata/stormTotalv3_24/stormTotalv3_24.point.snow.kml';
+		var URL = 'http://www.erh.noaa.gov/hydromet/eventdata/stormTotalv3_12/stormTotalv3_12.point.snow.kml';
 
 		request(URL, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
