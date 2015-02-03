@@ -18,6 +18,7 @@ function extractPropertiesFromPlacemark(placemark) {
 		result.snowfall = snowfallTotalMatch[1];
 		result.time = placemark.description[0].match(/<b>Time of Report:<\/b> (.*) on (.*)<br>/)[1];
 		result.date = placemark.description[0].match(/<b>Time of Report:<\/b> (.*) on (.*)<br>/)[2];
+		result.snowfall = Math.round(+snowfallTotalMatch[1]);
 	}
 
 	return result;
