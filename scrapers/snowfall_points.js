@@ -13,8 +13,8 @@ function extractPropertiesFromPlacemark(placemark) {
 
 		result = {};
 
-		result.latitude = placemark.LookAt[0].latitude[0];
-		result.longitude = placemark.LookAt[0].longitude[0];
+		result.latitude = (+placemark.LookAt[0].latitude[0]).toFixed(5);
+		result.longitude = (+placemark.LookAt[0].longitude[0]).toFixed(5);
 		result.snowfall = Math.round(+snowfallTotalMatch[1]);
 		// result.time = placemark.description[0].match(/<b>Time of Report:<\/b> (.*) on (.*)<br>/)[1];
 		// result.date = placemark.description[0].match(/<b>Time of Report:<\/b> (.*) on (.*)<br>/)[2];
