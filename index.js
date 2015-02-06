@@ -16,8 +16,8 @@ Promise.all(scrapers)
 			data = _.assign(data, result);
 		});
 
-		console.log('snowfall_scraper(' + JSON.stringify(data, null, 4) + ');');
+		console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
 	})
 	.catch(function(error) {
-		exec('echo "' + JSON.stringify(error, null, 4) + '" | mail -s "error in snowfall_scraper" gabriel.florit@globe.com');
+		exec('echo "' + JSON.stringify(error) + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
 	});		
