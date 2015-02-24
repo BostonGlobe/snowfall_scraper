@@ -17,6 +17,11 @@ Promise.all(scrapers)
 		});
 
 		console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
+
+		if (data.hasError) {
+			exec('echo "' + JSON.stringify(data) + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
+		}
+
 	})
 	.catch(function(error) {
 		exec('echo "' + JSON.stringify(error) + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
