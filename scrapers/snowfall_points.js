@@ -58,7 +58,11 @@ module.exports = function () {
 				});
 
 			} else {
-				reject(Error(error || 'Could not load ' + URL));
+				resolve({
+					hasError: true,
+					error: 'Could not load ' + URL,
+					snowfall_points: []
+				});
 			}
 		});
 	});

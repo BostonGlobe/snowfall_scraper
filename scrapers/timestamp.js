@@ -26,11 +26,17 @@ module.exports = function () {
 					});
 
 				} else {
-					reject('Could not regex match 24 hour snowfall reports datetime.');
+					resolve({
+						hasError: true,
+						error: 'Could not regex match 24 hour snowfall reports datetime.'
+					});
 				}
 
 			} else {
-				reject(Error(error || 'Could not load ' + URL));
+				resolve({
+					hasError: true,
+					error: 'Could not load ' + URL
+				});
 			}
 		});
 	});
