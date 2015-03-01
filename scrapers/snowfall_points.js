@@ -59,8 +59,6 @@ module.exports = function () {
 
 			} else {
 				resolve({
-					hasError: true,
-					error: 'Could not load ' + URL,
 					snowfall_points: []
 				});
 			}
