@@ -35,7 +35,7 @@ module.exports = function () {
 			} else {
 				resolve({
 					hasError: true,
-					error: 'Could not load ' + URL
+					error: response.statusCode + ': Could not load ' + URL
 				});
 			}
 		});
