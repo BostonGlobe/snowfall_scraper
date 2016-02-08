@@ -13,7 +13,7 @@ module.exports = function () {
 
 				var text = getText(body);
 				var data = parseText(text);
-				resolve({'id': 'climate', data });
+				resolve({'id': 'climate', 'data': data });
 
 			} else {
 				resolve({

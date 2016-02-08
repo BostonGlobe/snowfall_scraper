@@ -5,13 +5,13 @@ module.exports = function () {
 
 	return new Promise(function(resolve, reject) {
 
-		var URL = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/201602/snowfall_2016020806_e.txt';
+		var URL = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/201602/snowfall_2016020906_e.txt';
 
 		request(URL, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 
 				var data = parseText(body);
-				resolve({ 'id': 'national', data });
+				resolve({ 'id': 'national', 'data': data });
 
 			} else {
 				resolve({
