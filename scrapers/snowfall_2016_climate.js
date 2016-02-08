@@ -6,9 +6,9 @@ module.exports = function () {
 
 	return new Promise(function(resolve, reject) {
 
-		var URL = 'http://www.nws.noaa.gov/view/prodsByState.php?state=MA&prodtype=public';
+		var url = 'http://www.nws.noaa.gov/view/prodsByState.php?state=MA&prodtype=public';
 
-		request(URL, function (error, response, body) {
+		request(url, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 
 				var text = getText(body);
@@ -18,7 +18,7 @@ module.exports = function () {
 			} else {
 				resolve({
 					hasError: true,
-					error: response.statusCode + ': Could not load ' + URL
+					error: response.statusCode + ': Could not load ' + url
 				});
 			}
 		});

@@ -1,26 +1,64 @@
 var request = require('request');
 var Promise = require('es6-promise').Promise;
+var cheerio = require('cheerio');
 
 module.exports = function () {
 
 	return new Promise(function(resolve, reject) {
-
-		var URL = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/201602/snowfall_2016020906_e.txt';
-
-		request(URL, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-
-				var data = parseText(body);
-				resolve({ 'id': 'national', 'data': data });
-
-			} else {
+		getUrl(function(err, url) {
+			if(err) {
 				resolve({
 					hasError: true,
-					error: response.statusCode + ': Could not load ' + URL
+					error: response.statusCode + ': Could not load find url'
+				});
+			} else if(url) {
+				request(url, function (error, response, body) {
+					if (!error && response.statusCode == 200) {
+
+						var data = parseText(body);
+						resolve({ 'id': 'national', 'data': data });
+
+					} else {
+						resolve({
+							hasError: true,
+							error: response.statusCode + ': Could not load ' + url
+						});
+					}
 				});
 			}
 		});
 	});
+};
+
+var getUrl = function(cb) {
+	var base = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/';
+	var d = new Date();
+	var str = d.toLocaleDateString();
+	
+	var split = str.split('/');
+	var year = split[2];
+	var month = pad(split[0]);
+
+	var url = base + year + month;
+	
+	request(url, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			$ = cheerio.load(body);
+			var file = $('ul li').children().last().text().trim().replace('_m', '_e');
+			cb(null, url + '/' + file);
+		} else {
+			cb('error');
+		}
+	});
+};
+
+
+var pad = function(str) {
+	if(str.length === 1) {
+		return '0' + str;
+	} else {
+		return str;
+	}
 };
 
 var createStationJSON = function(columns, data) {
