@@ -1,28 +1,29 @@
 var Promise = require('es6-promise').Promise;
-var _ = require('lodash');
 require('shelljs/global');
 
 var scrapers = [
-	require('./scrapers/timestamp.js')(),
-	require('./scrapers/snowfall_points.js')()
+	require('./scrapers/snowfall_2016_national.js')(),
+	require('./scrapers/snowfall_2016_climate.js')()
 ];
 
 Promise.all(scrapers)
 	.then(function(results) {
-
+		
 		var data = {};
 
-		results.forEach(function(result) {
-			data = _.assign(data, result);
+		results.map(function(result) {
+			data[result.id] = result.data;
+			if (result.hasError) { data.hasError = result.error; }
 		});
 
 		if (data.hasError) {
-			exec('echo "' + JSON.stringify(data) + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
+			exec('echo "' + JSON.stringify(data) + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
 		} else {
+			data.updated = new Date().toString();
 			console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
 		}
-
 	})
 	.catch(function(error) {
-		exec('echo "' + JSON.stringify(error) + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
+		console.log('gee');
+		exec('echo "' + JSON.stringify(error) + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
 	});		
