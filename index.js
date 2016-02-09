@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 require('shelljs/global');
 
 var scrapers = [
-	require('./scrapers/snowfall_2016_national.js')(),
+	// require('./scrapers/snowfall_2016_national.js')(),
 	require('./scrapers/snowfall_2016_climate.js')()
 ];
 
