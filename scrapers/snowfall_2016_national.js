@@ -67,7 +67,7 @@ var createStationJSON = function(columns, data) {
 	return station;
 };
 
-var isInRegion = function(str) {
+var isInRegionState = function(str) {
 	var regions = ['MA', 'ME', 'VT', 'NH', 'RI', 'CT', 'NY', 'NJ', 'PA'];
 	var inRegion = regions.filter(function(el) {
 		var regionStr = ', '+ el;
@@ -77,7 +77,7 @@ var isInRegion = function(str) {
 	return inRegion.length;
 };
 
-var isInRegion2 = function(lat, lng) {
+var isInRegionBox = function(lat, lng) {
 	var bounds = {lat: [38.7,47.7], lng: [-81.0, -66.5]};
 	return lat > bounds.lat[0] && lat < bounds.lat[1] && lng > bounds.lng[0] && lng < bounds.lng[1];
 };
@@ -90,8 +90,7 @@ var parseText = function(str) {
 	var columns = rows[1].split('|');
 
 	var withoutPipe = data.map(function(el) { return el.split('|') });
-	var withRegion = withoutPipe.filter(function(el) { return el.length > 1 && isInRegion(el[1]) });
-	// var withRegion = withoutPipe.filter(function(el) { return el.length > 1 && isInRegion2(el[2], el[3]) });
+	var withRegion = withoutPipe.filter(function(el) { return el.length > 1 && isInRegionBox(el[1]) });
 
 	var withStation = withRegion.map(function(el) {
 		if (columns.length === el.length) {
