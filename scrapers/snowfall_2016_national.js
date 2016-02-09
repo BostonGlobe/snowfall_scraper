@@ -27,11 +27,9 @@ module.exports = function () {
 var getUrl = function(cb) {
 	var base = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/';
 	var d = new Date();
-	var str = d.toLocaleDateString();
-	
-	var split = str.split('/');
-	var year = split[2];
-	var month = pad(split[0]);
+
+	var year = d.getUTCFullYear();
+	var month = pad(d.getUTCMonth() + 1);
 
 	var url = base + year + month;
 	
@@ -47,11 +45,14 @@ var getUrl = function(cb) {
 };
 
 
-var pad = function(str) {
-	if(str.length === 1) {
-		return '0' + str;
+var pad = function(val) {
+	if (typeof val === 'number') {
+		val = val.toString();
+	}
+	if(val.length === 1) {
+		return '0' + val;
 	} else {
-		return str;
+		return val;
 	}
 };
 
