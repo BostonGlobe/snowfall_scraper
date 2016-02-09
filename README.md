@@ -13,9 +13,6 @@
 First, do a regular commit. Then tag a new commit with `prod`. This will tell Jenkins to fetch the tag. In other words:
 
 ```bash
-git tag -a prod -f
+git tag -a prod -f -m 'prod'
 git push -f --tags
 ```
-
-## possible sources
-http://www.nws.noaa.gov/view/states.php
