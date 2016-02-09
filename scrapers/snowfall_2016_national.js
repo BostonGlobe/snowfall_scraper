@@ -7,10 +7,7 @@ module.exports = function () {
 	return new Promise(function(resolve, reject) {
 		getUrl(function(err, url) {
 			if(err) {
-				resolve({
-					hasError: true,
-					error: err + ', ' + url
-				});
+				reject(err);
 			} else if(url) {
 				request(url, function (error, response, body) {
 					if (!error && response.statusCode == 200) {
@@ -19,10 +16,7 @@ module.exports = function () {
 						resolve({ 'id': 'national', 'data': data });
 
 					} else {
-						resolve({
-							hasError: true,
-							error: response.statusCode + ': Could not load ' + url
-						});
+						reject(error + ': ' + url);
 					}
 				});
 			}
@@ -47,7 +41,7 @@ var getUrl = function(cb) {
 			var file = $('ul li').children().last().text().trim().replace('_m', '_e');
 			cb(null, url + '/' + file);
 		} else {
-			cb('error');
+			cb(error + ': ' + url);
 		}
 	});
 };

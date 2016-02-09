@@ -13,17 +13,11 @@ Promise.all(scrapers)
 
 		results.map(function(result) {
 			data[result.id] = result.data;
-			if (result.hasError) { data.hasError = result.error; }
 		});
 
-		if (data.hasError) {
-			exec('echo "' + JSON.stringify(data) + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
-		} else {
-			data.updated = new Date().toString();
-			console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
-		}
+		data.updated = new Date().toString();
+		console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
 	})
 	.catch(function(error) {
-		console.log('gee');
-		exec('echo "' + JSON.stringify(error) + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
+		exec('echo "' + error + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
 	});		

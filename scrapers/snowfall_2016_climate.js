@@ -16,10 +16,7 @@ module.exports = function () {
 				resolve({'id': 'climate', 'data': data });
 
 			} else {
-				resolve({
-					hasError: true,
-					error: response.statusCode + ': Could not load ' + url
-				});
+				reject(error + ': ' + url);
 			}
 		});
 	});
