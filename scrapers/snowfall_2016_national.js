@@ -90,13 +90,52 @@ var parseText = function(str) {
 	var columns = rows[1].split('|');
 
 	var withoutPipe = data.map(function(el) { return el.split('|') });
-	var withRegion = withoutPipe.filter(function(el) { return el.length > 1 && isInRegionBox(el[1]) });
 
+	// reduce data to NE region
+	var withRegion = withoutPipe.filter(function(el) { return el.length > 1 && isInRegionBox(el[2], el[3]) });
+
+	// turn arrays into key/value pairs
 	var withStation = withRegion.map(function(el) {
 		if (columns.length === el.length) {
 			return createStationJSON(columns, el);
 		}
 	});
 
-	return withStation;
+	// sort by most recent time
+	withStation.sort(function(a,b) {
+		var dateA = new Date(a['DateTime_Report(UTC)']);
+		var dateB = new Date(b['DateTime_Report(UTC)']);
+
+		return dateB.getTime() - dateA.getTime();
+	});
+
+	// sort by amount
+	withStation.sort(function(a,b) {
+		var amountA = parseFloat(a['Amount']);
+		var amountB = parseFloat(b['Amount']);
+
+		return amountB - amountA;
+	});
+
+	// remove 0 amounts
+	withAmount = withStation.filter(function(el) {
+		return parseFloat(el['Amount']) > 0;
+	});
+
+
+	// create dict of unique station ids
+	var dict = {};
+
+	// filter out older occurences of station reports
+	withUnique = withAmount.filter(function(el) {
+		var id = 'id' + el['Station_Id'];
+		if (!dict[id]) {
+			dict[id] = true;
+			return true;
+		} else {
+			return false;	
+		}
+	});
+
+	return withUnique;
 };
