@@ -9,7 +9,7 @@ module.exports = function () {
 			if(err) {
 				resolve({
 					hasError: true,
-					error: response.statusCode + ': Could not load find url'
+					error: 'Could not load find url'
 				});
 			} else if(url) {
 				request(url, function (error, response, body) {
