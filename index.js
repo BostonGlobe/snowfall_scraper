@@ -19,5 +19,5 @@ Promise.all(scrapers)
 		console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
 	})
 	.catch(function(error) {
-		exec('echo "' + error + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
+		// exec('echo "' + error + '" | mail -s "error in snowfall_scraper." russell.goldenberg@globe.com');
 	});		
