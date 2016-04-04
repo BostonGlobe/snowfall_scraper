@@ -105,5 +105,7 @@ var parseText = function(text) {
 		return null;
 	});
 
-	return data.filter(function(el) { return el; });
+	return data.filter(function(el) { 
+		return el && el.Type === 'SNOW';
+	});
 };
