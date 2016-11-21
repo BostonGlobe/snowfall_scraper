@@ -8,7 +8,7 @@ var scrapers = [
 
 Promise.all(scrapers)
 	.then(function(results) {
-		
+
 		var data = {};
 
 		results.map(function(result) {
@@ -20,4 +20,4 @@ Promise.all(scrapers)
 	})
 	.catch(function(error) {
 		exec('echo "' + error + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
-	});		
+	});
