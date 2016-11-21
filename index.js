@@ -3,7 +3,7 @@ require('shelljs/global');
 
 var scrapers = [
 	require('./scrapers/snowfall_2016_national.js')(),
-	require('./scrapers/snowfall_2016_climate.js')()
+	// require('./scrapers/snowfall_2016_climate.js')()
 ];
 
 Promise.all(scrapers)
