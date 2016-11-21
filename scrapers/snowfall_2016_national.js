@@ -13,7 +13,7 @@ module.exports = function () {
 					if (!error && response.statusCode == 200) {
 
 						var data = parseText(body);
-						resolve({ 'id': 'national', 'data': data });
+						resolve({ 'id': 'climate', 'data': data });
 
 					} else {
 						reject(error + ': ' + url);
