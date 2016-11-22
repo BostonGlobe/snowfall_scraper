@@ -117,9 +117,10 @@ var parseText = function(str) {
 		return amountB - amountA;
 	});
 
-	// remove 0 amounts
+	// remove 0 amounts and greater than 24 hours
 	withAmount = withStation.filter(function(el) {
-		return parseFloat(el['Amount']) > 0;
+		return parseFloat(el['Amount']) > 0 &&
+			parseFloat(el['Duration']) <= 24;
 	});
 
 
