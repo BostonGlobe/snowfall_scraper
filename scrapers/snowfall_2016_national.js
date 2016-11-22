@@ -32,7 +32,7 @@ var getUrl = function(cb) {
 	var month = pad(d.getUTCMonth() + 1);
 
 	var url = base + year + month;
-	
+
 	request(url, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			$ = cheerio.load(body);
@@ -133,7 +133,7 @@ var parseText = function(str) {
 			dict[id] = true;
 			return true;
 		} else {
-			return false;	
+			return false;
 		}
 	});
 
