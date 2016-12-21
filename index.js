@@ -1,23 +1,31 @@
-var Promise = require('es6-promise').Promise;
-require('shelljs/global');
+import getReports from './scrapers/getReports.js'
 
-var scrapers = [
-	require('./scrapers/snowfall_2016_national.js')(),
-	// require('./scrapers/snowfall_2016_climate.js')()
-];
+require('shelljs/global')
+
+const scrapers = [
+	getReports(),
+]
 
 Promise.all(scrapers)
-	.then(function(results) {
+	.then(results => {
 
-		var data = {};
+		// var data = {}
 
-		results.map(function(result) {
-			data[result.id] = result.data;
-		});
+		// results.map(function(result) {
+		// 	data[result.id] = result.data
+		// })
 
-		data.updated = new Date().toString();
-		console.log('snowfall_scraper(' + JSON.stringify(data) + ');');
+		// data.updated = new Date().toString()
+		// // console.log('snowfall_scraper(' + JSON.stringify(data) + ')')
+		// console.log(JSON.stringify(data), null, 2)
+
+		console.log(results)
+
 	})
-	.catch(function(error) {
-		exec('echo "' + error + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com');
-	});
+	.catch(error => {
+
+		console.error(error)
+
+		// exec('echo "' + error + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com')
+
+	})
