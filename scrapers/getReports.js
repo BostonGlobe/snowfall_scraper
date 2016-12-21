@@ -1,84 +1,65 @@
-// var request = require('request')
-// var Promise = require('es6-promise').Promise
-// var dsvFormat = require('d3-dsv').dsvFormat
-// var EOL = require('os').EOL
-// var _ = require('lodash')
+import request from 'request-promise-native'
+import os from 'os'
+import { dsvFormat } from 'd3-dsv'
+import _ from 'lodash'
 
-// var getReportsUrl = require('./getReportsUrl.js')
+import getReportsUrl from './getReportsUrl.js'
 
-const getReports = () => {
+const getReports = () =>
 
-	return new Promise(function(resolve, reject) {
+	new Promise((resolve, reject) => {
 
-		resolve('yes')
+		getReportsUrl()
+			.then(url => request(url))
+			.then(body => {
 
-// 		getReportsUrl(function(err, url) {
+				const { EOL } = os
 
-// 			if (err) {
+				// Skip the first row
+				const data = body.split(EOL).slice(1).join(EOL)
 
-// 				reject(err)
+				// Parse pipe-delimited rows
+				const rows = dsvFormat('|').parse(data)
 
-// 			} else if (url) {
+				// Parse string to date
+				const toDate = (s) => {
 
-// 				request(url, function(error, response, body) {
+					const [year, month, date, hours, minutes ] = s.split(/-|\s|:/)
 
-// 					if (!error && response.statusCode == 200) {
+					return new Date(year, month - 1, date, hours, minutes)
 
-// 						// Skip the first row
-// 						var data = body.split(EOL).slice(1).join(EOL)
+				}
 
-// 						// Parse pipe-delimited rows
-// 						var rows = dsvFormat('|').parse(data)
+				const result = _(rows)
+					// filter to 24 hours or less
+					.filter(d => +d.Duration <= 24)
+					// group by station id
+					.groupBy('Station_Id')
+					.map((values, key) =>
 
-// 						var result = _(rows)
-// 							// filter to 24 hours or less
-// 							.filter(function(d) {
-// 								return +d.Duration <= 24
-// 							})
-// 							// group by station id
-// 							.groupBy('Station_Id')
-// 							.map(function(values, key) {
+						_(values)
+							.map(v => ({
+								...v,
+								date: toDate(v['DateTime_Report(UTC)']),
+								Amount: +v.Amount,
+								Duration: +v.Duration,
+							}))
+							.orderBy(['date', 'Duration'], ['desc', 'desc'])
+							.map(v => _.pick(v, ['Latitude', 'Longitude', 'Amount']))
+							.head())
 
-// 								// var entries = _(values)
-// 								// 	.map(function(value) {
-// 								// 		return
-// 								// 	})
-// 								// 	.value()
+					.filter('Amount')
+					.value()
 
-// 								return {
-// 									stationId: key,
-// 									entries: entries,
-// 								}
-// 							})
-// 							// .map(function(d) {
-// 							// 	return {
-// 							// 		amount: +d.Amount,
-// 							// 		lat: d.Latitude,
-// 							// 		lon: d.Longitude,
-// 							// 	}
-// 							// })
-// 							.sortBy(function(v) {
-// 								return -v.entries.length
-// 							})
-// 							.value()
+				resolve(result)
 
-// 						console.log(JSON.stringify(result, null, 2))
+			})
+			.catch(error => {
 
-// 						resolve(data)
+				reject(error)
 
+			})
 
-// 						// var data = parseText(body)
-// 						// resolve({ 'id': 'climate', 'data': data })
-
-// 					} else {
-
-// 						reject(error + ': ' + url)
-
-// 					}
-// 				})
-// 			}
-// 		})
 	})
-}
 
 export default getReports
