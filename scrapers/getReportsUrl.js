@@ -1,34 +1,41 @@
-var request = require('request')
-var cheerio = require('cheerio')
+import cheerio from 'cheerio'
+import request from 'request-promise-native'
 
-module.exports = function(cb) {
+const base = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/'
 
-	var base = 'http://www.nohrsc.noaa.gov/nsa/discussions_text/National/snowfall/'
+const getReportsUrl = () => {
 
-	var d = new Date()
+	// Create the url based on today's month
+	const date = new Date()
+	const year = date.getUTCFullYear()
+	const month = (date.getUTCMonth() + 1).toString().slice(-2)
+	const url = base + year + month
 
-	var year = d.getUTCFullYear()
+	// Request url
+	return request(url)
+		.then(html => {
 
-	var month = (d.getUTCMonth() + 1).toString().slice(-2)
+			// Parse html
+			const $ = cheerio.load(html)
 
-	var url = base + year + month
+			// Get the last entry
+			const file = $('ul li')
+				.children()
+				.last()
+				.text()
+				.trim()
+				.replace('_m', '_e')
 
-	request(url, function(error, response, body) {
+			// Return the last entry
+			return `${url}/${file}`
 
-		if (!error && response.statusCode == 200) {
+		})
+		.catch(error => {
 
-			$ = cheerio.load(body)
+			console.error(error)
 
-			var file = $('ul li').children().last().text().trim().replace('_m', '_e')
-
-			cb(null, url + '/' + file)
-
-		} else {
-
-			cb(error + ': ' + url)
-
-		}
-
-	})
+		})
 
 }
+
+export default getReportsUrl
