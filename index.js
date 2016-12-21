@@ -1,15 +1,17 @@
 import getReports from './scrapers/getReports.js'
 import shell from 'shelljs'
 
-getReports()
-	.then(reports => {
+const scrapers = [
+	getReports(),
+]
 
-		console.log(JSON.stringify(reports, null, 2))
+Promise.all(scrapers)
+	.then(results => {
+
+		console.log(JSON.stringify(results, null, 2))
 
 	})
 	.catch(error => {
-
-		console.error(error)
 
 		shell.exec('echo "' + error + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com')
 

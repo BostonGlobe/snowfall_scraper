@@ -30,7 +30,7 @@ const getReports = () =>
 
 				}
 
-				const result = _(rows)
+				const reports = _(rows)
 					// filter to 24 hours or less
 					.filter(d => +d.Duration <= 24)
 					// group by station id
@@ -51,7 +51,7 @@ const getReports = () =>
 					.filter('Amount')
 					.value()
 
-				resolve(result)
+				resolve({ reports })
 
 			})
 			.catch(error => {
