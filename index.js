@@ -1,11 +1,7 @@
 import getReports from './scrapers/getReports.js'
 import shell from 'shelljs'
 
-const scrapers = [
-	getReports(),
-]
-
-Promise.all(scrapers)
+getReports()
 	.then(results => {
 
 		console.log(JSON.stringify(results, null, 2))

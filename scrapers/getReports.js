@@ -7,59 +7,55 @@ import getReportsUrl from './getReportsUrl.js'
 
 const getReports = () =>
 
-	new Promise((resolve, reject) => {
+	getReportsUrl()
+		.then(url => request(url))
+		.then(body => {
 
-		getReportsUrl()
-			.then(url => request(url))
-			.then(body => {
+			const { EOL } = os
 
-				const { EOL } = os
+			// Skip the first row
+			const data = body.split(EOL).slice(1).join(EOL)
 
-				// Skip the first row
-				const data = body.split(EOL).slice(1).join(EOL)
+			// Parse pipe-delimited rows
+			const rows = dsvFormat('|').parse(data)
 
-				// Parse pipe-delimited rows
-				const rows = dsvFormat('|').parse(data)
+			// Parse string to date
+			const toDate = (s) => {
 
-				// Parse string to date
-				const toDate = (s) => {
+				const [year, month, date, hours, minutes ] = s.split(/-|\s|:/)
 
-					const [year, month, date, hours, minutes ] = s.split(/-|\s|:/)
+				return new Date(year, month - 1, date, hours, minutes)
 
-					return new Date(year, month - 1, date, hours, minutes)
+			}
 
-				}
+			const reports = _(rows)
+				// filter to 24 hours or less
+				.filter(d => +d.Duration <= 24)
+				// group by station id
+				.groupBy('Station_Id')
+				.map((values, key) =>
 
-				const reports = _(rows)
-					// filter to 24 hours or less
-					.filter(d => +d.Duration <= 24)
-					// group by station id
-					.groupBy('Station_Id')
-					.map((values, key) =>
+					_(values)
+						.map(v => ({
+							...v,
+							date: toDate(v['DateTime_Report(UTC)']),
+							Amount: +v.Amount,
+							Duration: +v.Duration,
+						}))
+						.orderBy(['date', 'Duration'], ['desc', 'desc'])
+						// .map(v => _.pick(v, ['Latitude', 'Longitude', 'Amount']))
+						.head())
 
-						_(values)
-							.map(v => ({
-								...v,
-								date: toDate(v['DateTime_Report(UTC)']),
-								Amount: +v.Amount,
-								Duration: +v.Duration,
-							}))
-							.orderBy(['date', 'Duration'], ['desc', 'desc'])
-							.map(v => _.pick(v, ['Latitude', 'Longitude', 'Amount']))
-							.head())
+				.filter(v => v.Amount > 0.001)
+				.value()
 
-					.filter('Amount')
-					.value()
+			return reports
 
-				resolve({ reports })
+		})
+		.catch(error => {
 
-			})
-			.catch(error => {
+			console.error(error)
 
-				reject(error)
-
-			})
-
-	})
+		})
 
 export default getReports
