@@ -11,5 +11,6 @@ getReports()
 	.catch(error => {
 
 		shell.exec('echo "' + error + '" | mail -s "error in snowfall_scraper." gabriel.florit@globe.com')
-
+		process.exit(1)
+		
 	})
