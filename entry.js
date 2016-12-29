@@ -1,10 +1,11 @@
 import getReports from './scrapers/getReports.js'
 import shell from 'shelljs'
+import fs from 'fs-extra'
 
 getReports()
 	.then(results => {
 
-		console.log(JSON.stringify(results, null, 2))
+		fs.writeJsonSync('./snowfall_scraper.json', results)
 
 	})
 	.catch(error => {

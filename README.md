@@ -6,7 +6,7 @@
 
 ## run
 
-- `node index.js > snowfall_scraper.json`
+- `npm run prod` (this will write to `snowfall_scraper.json`).
 
 ## deploy
 
